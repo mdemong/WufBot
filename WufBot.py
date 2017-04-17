@@ -1,9 +1,10 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import logging
 import re
+import config
 
-TOKEN = '356457602:AAEpx13fbbqoR_Nb4IKpn6SUxhRJ5eW3kQU'
-ICEDOG_USERID = '92366006'
+TOKEN = config.token
+OWNER_ID = config.owner_id
 
 # ???? something to do with exception handling / logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -41,7 +42,7 @@ dispatcher.add_handler(help_handler)
 # Forwarding #
 ##############
 def forward_me(bot, update):
-    bot.forwardMessage(chat_id=ICEDOG_USERID, from_chat_id=update.message.chat_id,
+    bot.forwardMessage(chat_id=OWNER_ID, from_chat_id=update.message.chat_id,
                        message_id=update.message.message_id, disable_notification=True)
 
 
@@ -75,7 +76,7 @@ def loudify(string):
         '[?]','?!', re.sub('[.!]+','!!!', string)
          ).upper() + '!!!'
 
-def request_yell_text():
+# def request_yell_text():
 
 
 
@@ -86,9 +87,9 @@ def yell(bot, update, args):
         removed_slash = update.message.text.split((' '),1)[1]
         text_yell = loudify(removed_slash)
         bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
-    else:
-        text_yell = loudify(request_yell_text())
-        bot.sendMessage(chat_id=update.message.chat_id,text=text_yell)
+    # else:
+    #     text_yell = loudify(request_yell_text())
+    #     bot.sendMessage(chat_id=update.message.chat_id,text=text_yell)
 
 
 
@@ -106,5 +107,5 @@ dispatcher.add_handler(yell_conv_handler)
 ################
 # STARTING BOT #
 ################
-updater.bot.sendMessage(ICEDOG_USERID, "The bot has been initialized!")
+updater.bot.sendMessage(OWNER_ID, "The bot has been initialized!")
 updater.start_polling()
