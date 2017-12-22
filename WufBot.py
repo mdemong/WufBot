@@ -3,6 +3,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 import logging
 import re
 import config
+import xml.etree.ElementTree as ET
+import urllib.request as URLreq
 
 TOKEN = config.token
 OWNER_ID = config.owner_id
@@ -110,8 +112,15 @@ dispatcher.add_handler(yell_handler)
 
 def cat(bot, update):
     forward_me(bot,update)
+
+    xml = URLreq.urlopen("http://thecatapi.com/api/images/get?format=xml&type=jpg,png").read()
+    root = ET.fromstring(xml)
+    url = next(root.iter('url')).text
+    source = next(root.iter('source_url')).text
     bot.send_photo(chat_id=update.message.chat_id,
-                   photo='http://thecatapi.com/api/images/get?format=src&type=jpg,png')
+                   photo=url)
+    bot.sendMessage(chat_id=update.message.chat_id, text="Source: " + source )
+
 
 cat_handler = CommandHandler('cat', cat)
 dispatcher.add_handler(cat_handler)
