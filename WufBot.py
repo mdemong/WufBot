@@ -62,11 +62,11 @@ dispatcher.add_handler(echo_handler)
 #########
 # /YELL #
 #########
-# def yell(bot, update, args):
-#     # join uses ' ' to separate elements in args (list).
-#     text_yell = ' '.join(args).upper() + "!!!"
-#     forward_me(bot, update)
-#     bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
+def yell(bot, update, args):
+    # join uses ' ' to separate elements in args (list).
+    text_yell = ' '.join(args).upper() + "!!!"
+    forward_me(bot, update)
+    bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
 
 COMMAND = 0
 PHRASE = 1
@@ -76,17 +76,20 @@ def loudify(string):
         '[?]','?!', re.sub('[.!]+','!!!', string)
          ).upper() + '!!!'
 
+yell_handler = CommandHandler('yell', yell, pass_args=True)
+dispatcher.add_handler(yell_handler)
+
 # def request_yell_text():
 
 
 
-def yell(bot, update, args):
-    forward_me(bot, update)
-    if (args.length > 0):
-        # takes msg text, chops off 0th word, preserves the rest of the string
-        removed_slash = update.message.text.split((' '),1)[1]
-        text_yell = loudify(removed_slash)
-        bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
+# def yell(bot, update, args):
+#     forward_me(bot, update)
+#     if (args.length > 0):
+#         # takes msg text, chops off 0th word, preserves the rest of the string
+#         removed_slash = update.message.text.split((' '),1)[1]
+#         text_yell = loudify(removed_slash)
+#         bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
     # else:
     #     text_yell = loudify(request_yell_text())
     #     bot.sendMessage(chat_id=update.message.chat_id,text=text_yell)
@@ -94,15 +97,15 @@ def yell(bot, update, args):
 
 
 
-yell_conv_handler = ConversationHandler(
-    entry_points=[CommandHandler('yell', yell)],
-    states={
-        COMMAND: [],
-
-
-    }
-)
-dispatcher.add_handler(yell_conv_handler)
+# yell_conv_handler = ConversationHandler(
+#     entry_points=[CommandHandler('yell', yell)],
+#     states={
+#         COMMAND: [],
+#
+#
+#     }
+# )
+# dispatcher.add_handler(yell_conv_handler)
 
 ################
 # STARTING BOT #
