@@ -1,3 +1,4 @@
+from pip._vendor.pyparsing import Combine
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import logging
 import re
@@ -64,7 +65,7 @@ dispatcher.add_handler(echo_handler)
 #########
 def yell(bot, update, args):
     # join uses ' ' to separate elements in args (list).
-    text_yell = ' '.join(args).upper() + "!!!"
+    text_yell = loudify(' '.join(args).upper())
     forward_me(bot, update)
     bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
 
@@ -106,6 +107,14 @@ dispatcher.add_handler(yell_handler)
 #     }
 # )
 # dispatcher.add_handler(yell_conv_handler)
+
+def cat(bot, update):
+    forward_me(bot,update)
+    bot.send_photo(chat_id=update.message.chat_id,
+                   photo='http://thecatapi.com/api/images/get?format=src&type=jpg,png')
+
+cat_handler = CommandHandler('cat', cat)
+dispatcher.add_handler(cat_handler)
 
 ################
 # STARTING BOT #
