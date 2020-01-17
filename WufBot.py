@@ -1,10 +1,9 @@
-from pip._vendor.pyparsing import Combine
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import logging
 import re
 import config
-import xml.etree.ElementTree as ET
 import urllib.request as URLreq
+import json
 
 TOKEN = config.token
 OWNER_ID = config.owner_id
@@ -79,47 +78,18 @@ def loudify(string):
         '[?]','?!', re.sub('[.!]+','!!!', string)
          ).upper() + '!!!'
 
+
 yell_handler = CommandHandler('yell', yell, pass_args=True)
 dispatcher.add_handler(yell_handler)
 
-# def request_yell_text():
-
-
-
-# def yell(bot, update, args):
-#     forward_me(bot, update)
-#     if (args.length > 0):
-#         # takes msg text, chops off 0th word, preserves the rest of the string
-#         removed_slash = update.message.text.split((' '),1)[1]
-#         text_yell = loudify(removed_slash)
-#         bot.sendMessage(chat_id=update.message.chat_id, text=text_yell)
-    # else:
-    #     text_yell = loudify(request_yell_text())
-    #     bot.sendMessage(chat_id=update.message.chat_id,text=text_yell)
-
-
-
-
-# yell_conv_handler = ConversationHandler(
-#     entry_points=[CommandHandler('yell', yell)],
-#     states={
-#         COMMAND: [],
-#
-#
-#     }
-# )
-# dispatcher.add_handler(yell_conv_handler)
 
 def cat(bot, update):
-    forward_me(bot,update)
+    forward_me(bot, update)
 
-    xml = URLreq.urlopen("http://thecatapi.com/api/images/get?format=xml&type=jpg,png").read()
-    root = ET.fromstring(xml)
-    url = next(root.iter('url')).text
-    source = next(root.iter('source_url')).text
-    bot.send_photo(chat_id=update.message.chat_id,
-                   photo=url)
-    bot.sendMessage(chat_id=update.message.chat_id, text="Source: " + source )
+    with URLreq.urlopen("https://api.thecatapi.com/v1/images/search") as url:
+        data = json.loads(url.read().decode())
+        img_url = data[0]['url']
+        bot.send_photo(chat_id=update.message.chat_id, photo=img_url)
 
 
 cat_handler = CommandHandler('cat', cat)
