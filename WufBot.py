@@ -7,6 +7,8 @@ import os
 
 TOKEN = os.environ['WUFBOT_TOKEN']
 OWNER_ID = os.environ['WUFBOT_OWNERID']
+PORT = int(os.environ.get('PORT', '8443'))
+DOMAIN = "https://wufbot.herokuapp.com/"
 
 # ???? something to do with exception handling / logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -99,5 +101,8 @@ dispatcher.add_handler(cat_handler)
 ################
 # STARTING BOT #
 ################
-updater.bot.sendMessage(OWNER_ID, "The bot has been initialized!")
-updater.start_polling()
+updater.start_webhook(listen="0.0.0.0",
+                      port=PORT,
+                      url_path=TOKEN)
+updater.bot.set_webhook(DOMAIN + TOKEN)
+updater.idle()
