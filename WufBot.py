@@ -1,12 +1,12 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import logging
 import re
-import config
 import urllib.request as URLreq
 import json
+import os
 
-TOKEN = config.token
-OWNER_ID = config.owner_id
+TOKEN = os.environ['WUFBOT_TOKEN']
+OWNER_ID = os.environ['WUFBOT_OWNERID']
 
 # ???? something to do with exception handling / logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -32,6 +32,7 @@ def start(bot, update):
 # on /start command, run the start function. (str command, function)
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
+
 
 #########
 # /HELP #
